@@ -1,0 +1,8 @@
+Website = "https://github.com/VentGrey/aysugoi"
+
+[Details]
+Icon = "Icon.png"
+Name = "AySugoi Anime Watchlist"
+ID = "com.aysugoi.app"
+Version = "0.1.0"
+Build = 1
