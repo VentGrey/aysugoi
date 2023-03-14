@@ -10,5 +10,9 @@ func main() {
 	window := app.NewWindow("Aysugoi")
 
 	window.SetContent(widget.NewLabel("Aysugoi!"))
-	window.ShowAndRun()
+	window.SetMaster()
+	window.Show()
+
+
+	app.Run()
 }
