@@ -8,6 +8,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
@@ -48,8 +49,6 @@ func main() {
 	// Set themeSwitch to dark mode by default
 	themeSwitch.SetChecked(true)
 
-	themeSwitch.SetChecked(app.Settings().Theme() == theme.DarkTheme())
-
 	// Top buttons container
 	buttonsTop := container.NewHBox(
 		layout.NewSpacer(),
@@ -61,6 +60,11 @@ func main() {
 	// Create a list of portrait images (manga and anime)
 	contentCovers := []fyne.CanvasObject{
 		// Things
+	}
+
+	// If contentCovers is empty, display a message
+	if len(contentCovers) == 0 {
+		contentCovers = append(contentCovers, widget.NewLabel("You haven't added any content yet! Try adding some by clicking the buttons above."))
 	}
 
 	// Create a "Scroll" container for the list of portrait images
@@ -76,10 +80,12 @@ func main() {
 
 	// Create a "About" button
 	aboutButton := widget.NewButtonWithIcon("", theme.HelpIcon(), func() {
-		fmt.Println("About button pressed")
+		dialog.ShowInformation("About",
+			"Aysugoi 0.1.0\nAysugoi is a simple anime and manga watchlist tracker made with Go + Fyne.\nAuthor: VentGrey\nLicense: GPL-3.0",
+			window)
 	})
 
-	// Create a horizontal container for lower buttons
+	// Create a horizontal container for lower buttons send it to the bottom of the window
 	buttonsBottom := container.NewHBox(
 		layout.NewSpacer(),
 		settingsButton,
