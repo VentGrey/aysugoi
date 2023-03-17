@@ -8,14 +8,12 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 )
 
 func main() {
-
 	url, err := url.Parse("https://github.com/VentGrey/aysugoi")
 
 	if err != nil {
@@ -67,36 +65,23 @@ func main() {
 		contentCovers = append(contentCovers, widget.NewLabel("You haven't added any content yet! Try adding some by clicking the buttons above."))
 	}
 
-	// Create a "Scroll" container for the list of portrait images
-	contentScroll := container.NewVScroll(container.NewVBox(contentCovers...))
-
 	// Create a "Settings" button
 	settingsButton := widget.NewButtonWithIcon("", theme.SettingsIcon(), func() {
 		fmt.Println("Settings button pressed")
-	})
-
-	// Create a link to the GitHub repository
-	githubLink := widget.NewHyperlink("GitHub", url)
-
-	// Create a "About" button
-	aboutButton := widget.NewButtonWithIcon("", theme.HelpIcon(), func() {
-		dialog.ShowInformation("About",
-			"Aysugoi 0.1.0\nAysugoi is a simple anime and manga watchlist tracker made with Go + Fyne.\nAuthor: VentGrey\nLicense: GPL-3.0",
-			window)
 	})
 
 	// Create a horizontal container for lower buttons send it to the bottom of the window
 	buttonsBottom := container.NewHBox(
 		layout.NewSpacer(),
 		settingsButton,
-		githubLink,
-		aboutButton,
+		widget.NewHyperlink("GitHub", url),
+		NewAboutButton(window),
 	)
 
 	// Create a vertical container for the whole window
 	mainContent := container.NewVBox(
 		buttonsTop,
-		contentScroll,
+		container.NewVScroll(container.NewVBox(contentCovers...)),
 		buttonsBottom,
 	)
 
