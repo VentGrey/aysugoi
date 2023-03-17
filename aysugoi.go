@@ -65,15 +65,10 @@ func main() {
 		contentCovers = append(contentCovers, widget.NewLabel("You haven't added any content yet! Try adding some by clicking the buttons above."))
 	}
 
-	// Create a "Settings" button
-	settingsButton := widget.NewButtonWithIcon("", theme.SettingsIcon(), func() {
-		fmt.Println("Settings button pressed")
-	})
-
 	// Create a horizontal container for lower buttons send it to the bottom of the window
 	buttonsBottom := container.NewHBox(
 		layout.NewSpacer(),
-		settingsButton,
+		NewSettingsButton(window),
 		widget.NewHyperlink("GitHub", url),
 		NewAboutButton(window),
 	)
