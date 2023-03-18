@@ -8,10 +8,18 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 )
+
+type Anime struct {
+    Image     string     `json:"image"`
+    Title     string     `json:"title"`
+    Parts     int        `json:"parts"`
+    Episodes  [][]int    `json:"episodes"`
+}
 
 func main() {
 	url, err := url.Parse("https://github.com/VentGrey/aysugoi")
@@ -25,17 +33,44 @@ func main() {
 	window := app.NewWindow("Aysugoi")
 	window.Resize(fyne.NewSize(800, 600))
 
-	// "Add anime" button
 	addAnimeButton := widget.NewButton("Add anime", func() {
-		fmt.Println("Add anime button pressed")
+		// Open a new dialog with a form to add an anime to the $HOME/.config/aysugoi/anime.json file
+		// The form should have the following fields:
+		// - Image (file picker)
+		// - Title (text input)
+		// - Parts (number input)
+		// - Episodes (Per part, a list of numbers)
+		// The form should be validated before submitting
+
+		imagePicker := widget.NewButton("Choose image", func() {
+			dialog.ShowFileOpen(func(reader fyne.URIReadCloser, err error) {
+				if err == nil && reader != nil {
+					// Aquí puedes manejar el archivo que el usuario seleccionó.
+					// En este ejemplo, simplemente mostramos el nombre del archivo.
+					dialog.ShowInformation("Selected file", reader.URI().Name(), window)
+					reader.Close()
+				}
+			}, window)
+		})
+		titleInput := widget.NewEntry()
+		partsInput := widget.NewEntry()
+		episodesInput := widget.NewEntry()
+
+
+		dialog.NewForm("Add anime", "Submit", "Cancel", []*widget.FormItem{
+			widget.NewFormItem("Image: ", imagePicker),
+			widget.NewFormItem("Title: ", titleInput),
+			widget.NewFormItem("Parts: ", partsInput),
+			widget.NewFormItem("Episodes: ", episodesInput),
+		}, func(save bool) {
+
+		}, window).Show()
 	})
 
-	// "Add manga" button
 	addMangaButton := widget.NewButton("Add manga", func() {
 		fmt.Println("Add manga button pressed")
 	})
 
-	// Light / Dark mode switch button
 	themeSwitch := widget.NewCheck("Dark mode", func(on bool) {
 		if on {
 			app.Settings().SetTheme(theme.DarkTheme())
@@ -44,10 +79,8 @@ func main() {
 		}
 	})
 
-	// Set themeSwitch to dark mode by default
 	themeSwitch.SetChecked(true)
 
-	// Top buttons container
 	buttonsTop := container.NewHBox(
 		layout.NewSpacer(),
 		addAnimeButton,
@@ -55,7 +88,6 @@ func main() {
 		themeSwitch,
 	)
 
-	// Create a list of portrait images (manga and anime)
 	contentCovers := []fyne.CanvasObject{
 		// Things
 	}
@@ -65,7 +97,6 @@ func main() {
 		contentCovers = append(contentCovers, widget.NewLabel("You haven't added any content yet! Try adding some by clicking the buttons above."))
 	}
 
-	// Create a horizontal container for lower buttons send it to the bottom of the window
 	buttonsBottom := container.NewHBox(
 		layout.NewSpacer(),
 		NewSettingsButton(window),
